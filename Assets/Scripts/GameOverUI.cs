@@ -23,7 +23,11 @@ public class GameOverUI : MonoBehaviour
         
         gameObject.SetActive(true);
         // send score to leaderboard api
+        
+        #if !UNITY_EDITOR
         StartCoroutine(Leaderboard.SubmitScore(ScoreUI.Instance.GetScore()));
+        #endif
+        
         StartCoroutine(FadeIn());
     }
 

@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private GameObject empPulsePrefab;
     
+    [SerializeField] private LineRenderer beamRenderer;
+    private Color beamColor = Color.darkOrange;
+    
     private Camera _mainCamera;
 
     void Start()
@@ -83,6 +86,9 @@ public class PlayerController : MonoBehaviour
             targetFOV,
             FOVLerpSpeed * Time.deltaTime
         );
+        
+        beamRenderer.startColor = beamColor;
+        beamRenderer.endColor = beamColor;
     }
     
     private void MoveForward()
@@ -207,17 +213,49 @@ public class PlayerController : MonoBehaviour
                 _speedTimer = SpeedDuration;
                 break;
             case PowerUpType.EMP:
-                // TODO: EMP
-                Debug.Log("EMP activated!");
                 DoubleShockwave();
                 break;
             case PowerUpType.Vaporizer:
-                // TODO: Vaporizer
-                Debug.Log("Vaporizer activated!");
+                FireVaporizerBeam();
                 break;
         }
     
         SetPowerUp(PowerUpType.None);
+    }
+    
+    private void FireVaporizerBeam()
+    {
+        Vector2 origin = transform.position;
+        Vector2 direction = transform.right;
+
+        float beamRange = 50000f;
+        LayerMask asteroidLayer = LayerMask.GetMask("Asteroids");
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, beamRange, asteroidLayer);
+
+        if (hit.collider != null && hit.collider.CompareTag("Asteroid"))
+        {
+            Destroy(hit.collider.gameObject);
+        }
+        
+        // visual zap beam
+        DrawVaporizerBeam(origin, hit.collider ? hit.point : origin + direction * beamRange);
+    }
+    
+    private void DrawVaporizerBeam(Vector2 start, Vector2 end)
+    {
+        beamRenderer.SetPosition(0, start);
+        beamRenderer.SetPosition(1, end);
+        beamRenderer.startColor = beamColor;
+        beamRenderer.endColor = beamColor;
+        
+        beamRenderer.enabled = true;
+        Invoke(nameof(HideBeam), 0.1f); // hide after 0.1s
+    }
+    
+    private void HideBeam()
+    {
+        beamRenderer.enabled = false;
     }
     
     private void DoubleShockwave()

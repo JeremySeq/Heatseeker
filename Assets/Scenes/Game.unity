@@ -255,6 +255,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183050084}
   m_CullTransparentMesh: 1
+--- !u!1 &315600895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 315600897}
+  - component: {fileID: 315600896}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &315600896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315600895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a58f96302504b5c8e80e636a942089f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxGroup: {fileID: 5004972616321894081, guid: e7dc0cb2ed259c74ea47cfff7edc2fa6, type: 2}
+  pickupSound: {fileID: 8300000, guid: 083381a8a1fdba2408677368ed46dbb9, type: 3}
+  speedBoostSound: {fileID: 8300000, guid: 7e64d232b6b92714dbc838f731517a28, type: 3}
+  vaporizerSound: {fileID: 8300000, guid: 1d38b71b3e215f44081a652893b325d2, type: 3}
+  shieldSound: {fileID: 8300000, guid: 1d74c1cbdf1364347ad1079173460ecc, type: 3}
+--- !u!4 &315600897
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315600895}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.83096, y: 1.35073, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &316704198
 GameObject:
   m_ObjectHideFlags: 0
@@ -2523,7 +2572,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 70
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -8128,3 +8177,4 @@ SceneRoots:
   - {fileID: 2033537744}
   - {fileID: 1544796641}
   - {fileID: 516187970}
+  - {fileID: 315600897}

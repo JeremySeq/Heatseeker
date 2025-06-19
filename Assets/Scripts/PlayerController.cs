@@ -148,6 +148,10 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.CompareTag("PowerUp"))
         {
             this.SetPowerUp(GetRandomPowerUp());
+            if (_heldPowerUp != PowerUpType.None)
+            {
+                AudioManager.Instance.PlaySound(AudioManager.Instance.pickupSound);
+            }
             Destroy(collision.gameObject);
         }
         else if (collision.gameObject.CompareTag("Missile") && _shieldActive)
@@ -181,6 +185,7 @@ public class PlayerController : MonoBehaviour
         // disable player
         gameObject.SetActive(false);
         gameOverUI.Show();
+        Debug.Log("GAME OVER");
         Destroy(gameObject);
     }
     
@@ -207,10 +212,12 @@ public class PlayerController : MonoBehaviour
                 _shieldActive = true;
                 shieldObject.SetActive(true);
                 _shieldTimer = ShieldDuration;
+                AudioManager.Instance.PlaySound(AudioManager.Instance.shieldSound);
                 break;
             case PowerUpType.Speed:
                 _speedActive = true;
                 _speedTimer = SpeedDuration;
+                AudioManager.Instance.PlaySound(AudioManager.Instance.speedBoostSound);
                 break;
             case PowerUpType.EMP:
                 DoubleShockwave();
@@ -225,10 +232,11 @@ public class PlayerController : MonoBehaviour
     
     private void FireVaporizerBeam()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.vaporizerSound);
         Vector2 origin = transform.position;
         Vector2 direction = transform.right;
 
-        float beamRange = 50000f;
+        float beamRange = 100f;
         LayerMask asteroidLayer = LayerMask.GetMask("Asteroids");
 
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, beamRange, asteroidLayer);
@@ -269,5 +277,4 @@ public class PlayerController : MonoBehaviour
         pulse2.GetComponent<EMPPulse>().pulseColor = new Color(1, 1, 1, .5f);
         pulse2.GetComponent<EMPPulse>().disableMissiles = false;
     }
-
 }

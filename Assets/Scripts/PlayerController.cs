@@ -222,6 +222,7 @@ public class PlayerController : MonoBehaviour
     
     private void DoubleShockwave()
     {
+        Camera.main.GetComponent<CameraFollow>().Shake(1, 2);
         GameObject pulse1 = Instantiate(empPulsePrefab, transform.position, Quaternion.identity, transform);
         pulse1.GetComponent<EMPPulse>().duration = 1f;
         GameObject pulse2 = Instantiate(empPulsePrefab, transform.position, Quaternion.identity, transform);

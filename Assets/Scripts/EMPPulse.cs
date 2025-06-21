@@ -17,7 +17,7 @@ public class EMPPulse : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         lr.loop = true;
         lr.positionCount = segments + 1;
-        lr.material = new Material(Shader.Find("Legacy Shaders/Particles/Additive"));
+        lr.material = new Material(Shader.Find("Sprites/Default"));
         lr.startColor = pulseColor;
         lr.endColor = pulseColor;
         lr.useWorldSpace = false;

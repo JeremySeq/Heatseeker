@@ -9,6 +9,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float smoothSpeed = 5f;
 
     private Vector3 _initialOffset;
+    private Vector3 _targetPosition;
     private float _shakeDuration = 0f;
     private float _shakeMagnitude = 0f;
     private Vector3 _shakeOffset;
@@ -20,7 +21,10 @@ public class CameraFollow : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (target == null) return;
+        if (target != null)
+        {
+            _targetPosition = target.position;
+        }
 
         // shake logic
         if (_shakeDuration > 0)
@@ -38,7 +42,7 @@ public class CameraFollow : MonoBehaviour
         }
 
         // follow + shake
-        Vector3 desiredPosition = target.position + offset + _shakeOffset;
+        Vector3 desiredPosition = _targetPosition + offset + _shakeOffset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
     }

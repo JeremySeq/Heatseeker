@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject empPulsePrefab;
     
     [SerializeField] private LineRenderer beamRenderer;
+    [SerializeField] private LineRenderer beamRenderer2;
     private Color beamColor = Color.darkOrange;
     
     private Camera _mainCamera;
@@ -86,9 +87,6 @@ public class PlayerController : MonoBehaviour
             targetFOV,
             FOVLerpSpeed * Time.deltaTime
         );
-        
-        beamRenderer.startColor = beamColor;
-        beamRenderer.endColor = beamColor;
     }
     
     private void MoveForward()
@@ -179,6 +177,9 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
+        Camera.main.GetComponent<CameraFollow>().Shake(.5f, 3);
+        PostProcessingFX.FadeInChromaticAberration(1f, .5f, false);
+        
         ScoreUI.Instance.StopTimer();
         
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
@@ -254,27 +255,44 @@ public class PlayerController : MonoBehaviour
     {
         beamRenderer.SetPosition(0, start);
         beamRenderer.SetPosition(1, end);
-        beamRenderer.startColor = beamColor;
-        beamRenderer.endColor = beamColor;
-        
+        // beamRenderer.startColor = Color.white;
+        // beamRenderer.endColor = Color.white;
         beamRenderer.enabled = true;
+        
+        beamRenderer2.SetPosition(0, start);
+        beamRenderer2.SetPosition(1, end);
+        beamRenderer2.startColor = beamColor;
+        beamRenderer2.endColor = beamColor;
+        beamRenderer2.enabled = true;
+        
         Invoke(nameof(HideBeam), 0.1f); // hide after 0.1s
     }
     
     private void HideBeam()
     {
         beamRenderer.enabled = false;
+        beamRenderer2.enabled = false;
     }
     
     private void DoubleShockwave()
     {
         Camera.main.GetComponent<CameraFollow>().Shake(1, 2);
+
         GameObject pulse1 = Instantiate(empPulsePrefab, transform.position, Quaternion.identity, transform);
         pulse1.GetComponent<EMPPulse>().duration = 1f;
+
         GameObject pulse2 = Instantiate(empPulsePrefab, transform.position, Quaternion.identity, transform);
         pulse2.GetComponent<EMPPulse>().duration = 2f;
         pulse2.GetComponent<LineRenderer>().startWidth *= 3;
         pulse2.GetComponent<EMPPulse>().pulseColor = new Color(1, 1, 1, .5f);
         pulse2.GetComponent<EMPPulse>().disableMissiles = false;
+
+        PostProcessingFX.PulseChromaticAberration(
+            fadeInTime: 0.1f,
+            holdTime: 1.5f,
+            fadeOutTime: 0.5f,
+            maxIntensity: 1f
+        );
     }
+
 }

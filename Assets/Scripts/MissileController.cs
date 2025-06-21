@@ -13,6 +13,9 @@ public class MissileController : MonoBehaviour
     [SerializeField] private static float moveSpeed = 7.5f;
     [SerializeField] private static float rotationSpeed = 4.2f;
     [SerializeField] private static float impactForce = 2f;
+    
+    private Vector2 _externalVelocity; // velocity from repulses
+    private float _repulseDecayRate = 5f; // how quickly the repulse fades
 
     private float _moveSpeed;
     private float _rotationSpeed;
@@ -28,6 +31,7 @@ public class MissileController : MonoBehaviour
 
     void Update()
     {
+        ApplyExternalVelocity();
         MoveForward();
         if (!_trackingEnabled)
         {
@@ -89,11 +93,23 @@ public class MissileController : MonoBehaviour
         _disableTimer = duration;
     }
     
-    
-    
     public void Explode()
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
+    }
+    
+    private void ApplyExternalVelocity()
+    {
+        if (_externalVelocity.sqrMagnitude > 0.001f)
+        {
+            transform.position += (Vector3)(_externalVelocity * Time.deltaTime);
+            _externalVelocity = Vector2.Lerp(_externalVelocity, Vector2.zero, _repulseDecayRate * Time.deltaTime);
+        }
+    }
+    
+    public void Repulse(Vector2 force)
+    {
+        _externalVelocity += force;
     }
 }

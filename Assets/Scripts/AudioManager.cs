@@ -10,8 +10,8 @@ public class AudioManager : MonoBehaviour
     [Header("Sound Clips")] [SerializeField]
     public AudioClip pickupSound;
     public AudioClip speedBoostSound;
-    public AudioClip vaporizerSound;
     public AudioClip shieldSound;
+    public AudioClip repulsorSound;
     
     private void Awake()
     {

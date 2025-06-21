@@ -38,9 +38,8 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private GameObject empPulsePrefab;
     
-    [SerializeField] private LineRenderer beamRenderer;
-    [SerializeField] private LineRenderer beamRenderer2;
-    private Color beamColor = Color.darkOrange;
+    public float repulseRadius = 5f;
+    public float repulseForce = 10f;
     
     private Camera _mainCamera;
 
@@ -223,55 +222,12 @@ public class PlayerController : MonoBehaviour
             case PowerUpType.EMP:
                 DoubleShockwave();
                 break;
-            case PowerUpType.Vaporizer:
-                FireVaporizerBeam();
+            case PowerUpType.Repulsor:
+                Repulse();
                 break;
         }
     
         SetPowerUp(PowerUpType.None);
-    }
-    
-    private void FireVaporizerBeam()
-    {
-        AudioManager.Instance.PlaySound(AudioManager.Instance.vaporizerSound);
-        Vector2 origin = transform.position;
-        Vector2 direction = transform.right;
-
-        float beamRange = 100f;
-        LayerMask asteroidLayer = LayerMask.GetMask("Asteroids");
-
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, beamRange, asteroidLayer);
-
-        if (hit.collider != null && hit.collider.CompareTag("Asteroid"))
-        {
-            Destroy(hit.collider.gameObject);
-        }
-        
-        // visual zap beam
-        DrawVaporizerBeam(origin, hit.collider ? hit.point : origin + direction * beamRange);
-    }
-    
-    private void DrawVaporizerBeam(Vector2 start, Vector2 end)
-    {
-        beamRenderer.SetPosition(0, start);
-        beamRenderer.SetPosition(1, end);
-        // beamRenderer.startColor = Color.white;
-        // beamRenderer.endColor = Color.white;
-        beamRenderer.enabled = true;
-        
-        beamRenderer2.SetPosition(0, start);
-        beamRenderer2.SetPosition(1, end);
-        beamRenderer2.startColor = beamColor;
-        beamRenderer2.endColor = beamColor;
-        beamRenderer2.enabled = true;
-        
-        Invoke(nameof(HideBeam), 0.1f); // hide after 0.1s
-    }
-    
-    private void HideBeam()
-    {
-        beamRenderer.enabled = false;
-        beamRenderer2.enabled = false;
     }
     
     private void DoubleShockwave()
@@ -295,4 +251,29 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+    private void Repulse()
+    {
+        Vector2 center = transform.position;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(center, repulseRadius);
+
+        foreach (var hit in hits)
+        {
+            if (hit.gameObject == gameObject) continue;
+            MissileController missile = hit.GetComponent<MissileController>();
+            if (missile != null)
+            {
+                Vector2 direction = (hit.transform.position - transform.position).normalized;
+                missile.Repulse(direction * repulseForce);
+            }
+            if (hit.attachedRigidbody != null && hit.attachedRigidbody.bodyType == RigidbodyType2D.Dynamic)
+            {
+                Vector2 direction = (hit.transform.position - transform.position).normalized;
+                float mass = hit.attachedRigidbody.mass;
+                hit.attachedRigidbody.AddForce(repulseForce * mass * direction, ForceMode2D.Impulse);
+            }
+        }
+        AudioManager.Instance.PlaySound(AudioManager.Instance.repulsorSound);
+        PostProcessingFX.PulseChromaticAberration(0.1f, 0.1f, 0.2f, 0.7f);
+        Camera.main.GetComponent<CameraFollow>()?.Shake(0.5f, 0.3f);
+    }
 }

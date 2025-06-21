@@ -4,5 +4,5 @@
     Shield,
     Speed,
     EMP,
-    Vaporizer
+    Repulsor
 }

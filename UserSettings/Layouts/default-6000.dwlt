@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Scene
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -510,7 +510,7 @@ MonoBehaviour:
     m_SceneHandles: 
     m_ShowAllHits: 0
     m_SkipHidden: 0
-    m_SearchArea: 1
+    m_SearchArea: 0
     m_Folders:
     - Assets
     m_Globs: []
@@ -528,10 +528,10 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 94950000
-    m_LastClickedID: 38292
-    m_ExpandedIDs: 0000000080b6000082b60000
+    scrollPos: {x: 0, y: 12}
+    m_SelectedIDs: 80b60000
+    m_LastClickedID: 46720
+    m_ExpandedIDs: 000000006ab600006cb60000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -560,7 +560,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000080b6000082b60000
+    m_ExpandedIDs: 000000006ab600006cb60000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -606,7 +606,7 @@ MonoBehaviour:
       m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_TrimLeadingAndTrailingWhitespace: 0
-      m_ClientGUIView: {fileID: 11}
+      m_ClientGUIView: {fileID: 5}
     m_CreateAssetUtility:
       m_EndAction: {fileID: 0}
       m_InstanceID: 0
@@ -708,7 +708,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 1e98ebff3098ebfff29aebff269bebffac8aedffbe8aedff7c8dedffac8dedff0aacffff40afffffdafaffff569f0000749f0000
+      m_ExpandedIDs: d4e4f6ffe6e4f6ffa4e7f6ffd4e7f6ff464afdff584afdffe64cfdff164dfdffc055fdffd255fdff9458fdffc858fdffd0a4fdffe2a4fdff70a7fdffa0a7fdffceaffdffe0affdff72b2fdffa6b2fdff3ebbfdff50bbfdff12befdff46befdfffcfefeff0efffeffd001ffff0402ffffb4faffffdcef0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1200,9 +1200,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 0.24970795, y: 0.75967973, z: 0.06202219}
+    m_Target: {x: -0.3861506, y: 0.87580734, z: 0.058526725}
     speed: 2
-    m_Value: {x: 0.24970795, y: 0.75967973, z: 0.06202219}
+    m_Value: {x: -0.3861506, y: 0.87580734, z: 0.058526725}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1252,9 +1252,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 3.798394
+    m_Target: 4.147941
     speed: 2
-    m_Value: 3.798394
+    m_Value: 4.147941
   m_Ortho:
     m_Target: 1
     speed: 2

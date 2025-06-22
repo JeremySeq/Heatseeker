@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour
@@ -14,6 +13,8 @@ public class AsteroidSpawner : MonoBehaviour
     [SerializeField] private float _minVelocity = 1f;
     [SerializeField] private float _maxVelocity = 3f;
     [SerializeField] private float _maxTorque = 0.5f;
+    
+    [SerializeField] private float minimumDistanceFromPlayer = 3f;
 
     private HashSet<Vector2Int> spawnedChunks = new HashSet<Vector2Int>();
 
@@ -43,14 +44,26 @@ public class AsteroidSpawner : MonoBehaviour
     void SpawnAsteroidsInChunk(Vector2Int chunk)
     {
         Vector2 chunkOrigin = new Vector2(chunk.x * ChunkSize, chunk.y * ChunkSize);
+        Vector2 playerPos = transform.position;
 
-        for (int i = 0; i < asteroidsPerChunk; i++)
+        int spawned = 0;
+        int maxAttempts = asteroidsPerChunk * 3; // to avoid infinite loops
+        int attempts = 0;
+
+        while (spawned < asteroidsPerChunk && attempts < maxAttempts)
         {
+            attempts++;
+
             Vector2 spawnOffset = new Vector2(
                 Random.Range(0f, ChunkSize),
                 Random.Range(0f, ChunkSize)
             );
             Vector2 spawnPos = chunkOrigin + spawnOffset;
+
+            if (Vector2.Distance(spawnPos, playerPos) < minimumDistanceFromPlayer)
+            {
+                continue; // too close, try again
+            }
 
             GameObject prefab = asteroidPrefabs[Random.Range(0, asteroidPrefabs.Length)];
             GameObject asteroid = Instantiate(prefab, spawnPos, Quaternion.identity);
@@ -66,6 +79,8 @@ public class AsteroidSpawner : MonoBehaviour
                 float adjustedTorque = Random.Range(-_maxTorque, _maxTorque) / scale;
                 rb.AddTorque(adjustedTorque, ForceMode2D.Impulse);
             }
+
+            spawned++;
         }
 
         // spawn power-up with a lower chance
@@ -77,11 +92,14 @@ public class AsteroidSpawner : MonoBehaviour
             );
             Vector2 spawnPos = chunkOrigin + spawnOffset;
 
-            GameObject powerUp = Instantiate(
-                powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)],
-                spawnPos,
-                Quaternion.identity
-            );
+            if (Vector2.Distance(spawnPos, playerPos) >= minimumDistanceFromPlayer)
+            {
+                Instantiate(
+                    powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)],
+                    spawnPos,
+                    Quaternion.identity
+                );
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class MainMenuUI : MonoBehaviour
 {
+    
+    
     public void StartGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
@@ -11,6 +13,11 @@ public class MainMenuUI : MonoBehaviour
     {
         // Implement settings menu logic here
         Debug.Log("Settings menu opened.");
+    }
+
+    public void CloseSettings()
+    {
+        
     }
     
     public void QuitGame()

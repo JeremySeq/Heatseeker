@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
             this.SetPowerUp(GetRandomPowerUp());
             if (_heldPowerUp != PowerUpType.None)
             {
-                AudioManager.Instance.PlaySound(AudioManager.Instance.pickupSound);
+                AudioManager.Instance.PlaySound(AudioManager.Instance.pickupSound, .8f);
             }
             Destroy(collision.gameObject);
         }

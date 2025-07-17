@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
@@ -19,6 +20,8 @@ public class PlayerController : MonoBehaviour
     
     private PowerUpType _heldPowerUp = PowerUpType.None;
     public TextMeshProUGUI powerUpText;
+    public TextMeshProUGUI powerUpButtonText;
+    public Button powerUpMobileButton;
 
     public GameObject shieldObject;
     private bool _shieldActive = false;
@@ -45,6 +48,8 @@ public class PlayerController : MonoBehaviour
     {
         _mainCamera = Camera.main;
         _normalFOV = _mainCamera.fieldOfView;
+        powerUpButtonText.text = IsMobile() ? "tap right" : "left click";
+        powerUpMobileButton.gameObject.SetActive(IsMobile());
     }
 
     void Update()
@@ -100,7 +105,7 @@ public class PlayerController : MonoBehaviour
     
     public static bool IsMobile()
     {
-        return Application.isMobilePlatform;
+        return true;
     }
     
     private void RotateToMouse()
@@ -201,7 +206,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UsePowerUp()
+    public void UsePowerUp()
     {
 
         switch (_heldPowerUp)

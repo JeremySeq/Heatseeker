@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
     
     public static bool IsMobile()
     {
-        return true;
+        return Application.isMobilePlatform;
     }
     
     private void RotateToMouse()

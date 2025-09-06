@@ -22,7 +22,14 @@ public class BlackHoleGravity : MonoBehaviour
                 // Remove object if too close to center
                 if (distance < destructionRadius)
                 {
-                    Destroy(rb.gameObject);
+                    if (col.gameObject.CompareTag("Player"))
+                    {
+                        col.gameObject.GetComponent<PlayerController>().GameOver();
+                    }
+                    else
+                    {
+                        Destroy(rb.gameObject);
+                    }
                     continue;
                 }
 

@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     public GameObject explosionPrefab;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public float repulseForce = 10f;
     
     private Camera _mainCamera;
+    private Rigidbody2D _rb;
 
     void Start()
     {
@@ -50,21 +52,12 @@ public class PlayerController : MonoBehaviour
         _normalFOV = _mainCamera.fieldOfView;
         powerUpButtonText.text = IsMobile() ? "tap right" : "left click";
         powerUpMobileButton.gameObject.SetActive(IsMobile());
+
+        _rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        MoveForward();
-        if (IsMobile())
-            RotateWithJoystick();
-        else
-            RotateToMouse();
-
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            this.UsePowerUp();
-        }
-        
         if (_shieldActive)
         {
             _shieldTimer -= Time.deltaTime;
@@ -84,61 +77,50 @@ public class PlayerController : MonoBehaviour
             }
         }
         float targetFOV = _speedActive ? BoostedFOV : _normalFOV;
-        _mainCamera.fieldOfView = Mathf.Lerp(
-            _mainCamera.fieldOfView,
-            targetFOV,
-            FOVLerpSpeed * Time.deltaTime
-        );
+        _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, targetFOV, FOVLerpSpeed * Time.deltaTime);
+
+        // powerup use
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+            UsePowerUp();
+    }
+
+    void FixedUpdate()
+    {
+        MoveForwardPhysics();
+        RotatePhysics();
+    }
+
+    private void MoveForwardPhysics()
+    {
+        float speed = _speedActive ? BaseMoveSpeed * SpeedMultiplier : BaseMoveSpeed;
+        _rb.linearVelocity = transform.right * speed;
     }
     
-    private void MoveForward()
+    private void RotatePhysics()
     {
-        if (_speedActive)
+        float targetAngle;
+
+        if (IsMobile())
         {
-            transform.position += BaseMoveSpeed * SpeedMultiplier * Time.deltaTime * transform.right;
+            Vector2 dir = joystick.inputDirection;
+            if (dir.sqrMagnitude < 0.01f) return;
+            targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         }
         else
         {
-            transform.position += BaseMoveSpeed * Time.deltaTime * transform.right;
+            Vector3 mousePos = Mouse.current.position.ReadValue();
+            mousePos.z = Mathf.Abs(_mainCamera.transform.position.z - transform.position.z);
+            Vector3 worldPos = _mainCamera.ScreenToWorldPoint(mousePos);
+            Vector2 dir = worldPos - transform.position;
+            targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         }
+
+        float angle = Mathf.LerpAngle(transform.eulerAngles.z, targetAngle, rotationSpeed * Time.fixedDeltaTime);
+        _rb.MoveRotation(angle);
     }
-    
-    public static bool IsMobile()
-    {
-        return Application.isMobilePlatform;
-    }
-    
-    private void RotateToMouse()
-    {
-        // convert screen position to world space
-        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-        mouseScreenPos.z = Mathf.Abs(_mainCamera.transform.position.z - transform.position.z); // distance to player
-        Vector3 worldPos = _mainCamera.ScreenToWorldPoint(mouseScreenPos);
-        worldPos.z = 0f; // to avoid depth drift in 2D
 
-        // calculate direction vector from rocket to mouse
-        Vector3 direction = worldPos - transform.position;
+    public static bool IsMobile() => Application.isMobilePlatform;
 
-        // calculate target rotation as angle
-        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-        // smoothly rotate rocket toward target angle
-        float angle = Mathf.LerpAngle(transform.eulerAngles.z, targetAngle, rotationSpeed * Time.deltaTime);
-
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-    }
-    
-    private void RotateWithJoystick()
-    {
-        Vector2 direction = joystick.inputDirection;
-        if (direction.sqrMagnitude < 0.01f)
-            return;
-
-        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        float angle = Mathf.LerpAngle(transform.eulerAngles.z, targetAngle, rotationSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-    }
-    
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Shield"))
@@ -172,7 +154,7 @@ public class PlayerController : MonoBehaviour
         return (PowerUpType) Random.Range(1, powerUpCount);
     }
     
-    private void GameOver()
+    public void GameOver()
     {
         if (_invincible)
         {

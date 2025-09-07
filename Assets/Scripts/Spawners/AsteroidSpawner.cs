@@ -5,7 +5,9 @@ public class AsteroidSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] asteroidPrefabs;
     [SerializeField] private GameObject[] powerUpPrefabs;
-    [SerializeField] [Range(0f, 1f)] private float powerUpSpawnChancePerChunk = .7f;
+    [SerializeField] private GameObject blackHolePrefab;
+    [SerializeField] [Range(0f, 1f)] private float powerUpSpawnChancePerChunk = .4f;
+    [SerializeField] [Range(0f, 1f)] private float blackHoleSpawnChancePerChunk = .05f;
 
     public static float ChunkSize = 20f;
     [SerializeField] private int asteroidsPerChunk = 10;
@@ -101,5 +103,21 @@ public class AsteroidSpawner : MonoBehaviour
                 );
             }
         }
+
+        // spawn black holes
+        if (blackHolePrefab != null && Random.value < blackHoleSpawnChancePerChunk)
+        {
+            Vector2 spawnOffset = new Vector2(
+                Random.Range(0f, ChunkSize),
+                Random.Range(0f, ChunkSize)
+            );
+            Vector2 spawnPos = chunkOrigin + spawnOffset;
+
+            if (Vector2.Distance(spawnPos, playerPos) >= minimumDistanceFromPlayer)
+            {
+                Instantiate(blackHolePrefab, spawnPos, Quaternion.identity);
+            }
+        }
     }
+
 }

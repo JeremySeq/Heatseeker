@@ -12,6 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] public AudioClip speedBoostSound;
     [SerializeField] public AudioClip shieldSound;
     [SerializeField] public AudioClip repulsorSound;
+    [SerializeField] public AudioClip phaseShiftSound;
 
     [Space(10)]
     [Header("Sound Clips - UI")]

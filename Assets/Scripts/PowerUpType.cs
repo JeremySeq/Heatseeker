@@ -4,5 +4,6 @@
     Shield,
     Speed,
     EMP,
-    Repulsor
+    Repulsor,
+    PhaseShift
 }

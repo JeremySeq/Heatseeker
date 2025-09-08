@@ -373,7 +373,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -56.178207, y: 0, z: 0, w: 0}
+  m_margin: {x: -94.39366, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3335,6 +3335,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2274686425209701172, guid: a5b2512b8097d4242ad7deafd221bf0e, type: 3}
+      propertyPath: phaseShiftSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7c2cf185dddccdf41b25f776f2388bb2, type: 3}
     - target: {fileID: 5207414223595002030, guid: a5b2512b8097d4242ad7deafd221bf0e, type: 3}
       propertyPath: m_Name
       value: AudioManager

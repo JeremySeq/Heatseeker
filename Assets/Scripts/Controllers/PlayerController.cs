@@ -37,6 +37,10 @@ public class PlayerController : MonoBehaviour
     private float _normalFOV;
     private const float BoostedFOV = 70f;
     private const float FOVLerpSpeed = 5f;
+
+    private bool _isGhost = false; // used for phase shift power-up
+    private float _ghostTimer = 0f;
+    private const float GhostDuration = 5f;
     
     [SerializeField] private GameObject empPulsePrefab;
     
@@ -76,6 +80,19 @@ public class PlayerController : MonoBehaviour
                 _speedActive = false;
             }
         }
+
+        if (this._isGhost)
+        {
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(0f, .4f, .7f, .7f);
+            _ghostTimer -= Time.deltaTime;
+            if (_ghostTimer <= 0f)
+            {
+                _isGhost = false;
+                gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                this.GetComponent<Collider2D>().enabled = true;
+            }
+        }
+        
         float targetFOV = _speedActive ? BoostedFOV : _normalFOV;
         _mainCamera.fieldOfView = Mathf.Lerp(_mainCamera.fieldOfView, targetFOV, FOVLerpSpeed * Time.deltaTime);
 
@@ -210,6 +227,13 @@ public class PlayerController : MonoBehaviour
             case PowerUpType.Repulsor:
                 Repulse();
                 break;
+			case PowerUpType.PhaseShift:
+                this._isGhost = true;
+                this._ghostTimer = GhostDuration;
+                this.GetComponent<Collider2D>().enabled = false;
+                PostProcessingFX.PulseChromaticAberration(holdTime: 5f);
+                AudioManager.Instance.PlaySound(AudioManager.Instance.phaseShiftSound);
+            	break;
         }
     
         SetPowerUp(PowerUpType.None);

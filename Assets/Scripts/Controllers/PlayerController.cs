@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI powerUpText;
     public TextMeshProUGUI powerUpButtonText;
     public Button powerUpMobileButton;
+    public RectTransform powerUpDurationPanel;
 
     public GameObject shieldObject;
     private bool _shieldActive = false;
@@ -62,6 +63,24 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        
+        // update UI for power-up duration
+        float durationPercent = 0f;
+
+        if (_shieldActive)
+            durationPercent = _shieldTimer / ShieldDuration;
+        else if (_speedActive)
+            durationPercent = _speedTimer / SpeedDuration;
+        else if (_isGhost)
+            durationPercent = _ghostTimer / GhostDuration;
+
+        // width starts at 150 and shrinks to 0 over duration
+        if (powerUpDurationPanel != null)
+        {
+            float fullWidth = 150f; // starting width
+            powerUpDurationPanel.sizeDelta = new Vector2(fullWidth * durationPercent, powerUpDurationPanel.sizeDelta.y);
+        }
+
         if (_shieldActive)
         {
             _shieldTimer -= Time.deltaTime;
